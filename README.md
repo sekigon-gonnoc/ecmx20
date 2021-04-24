@@ -163,7 +163,7 @@
       - ファームウェアの入っているリポジトリ
         https://github.com/sekigon-gonnoc/qmk_firmware/tree/dev/sekigon
         ```bash
-          make sekigon/exmx20:test:flash
+          make sekigon/ecmx20:test:flash
         ```
 
 ### 動作点を調整する
