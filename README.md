@@ -79,7 +79,7 @@
  - WS2812C-2020をLED裏側の緑線とシルクの白線が同じ側にくるように取り付る
     - ランドを大きめにしたので、ランドの長手方向にそってハンダゴテを滑らせるとはんだ付けしやすいです 
     - 熱に弱いので焦らず1ピンずつはんだ付けしていってください
-    - この段階で動作確認したい場合は[テスト用ファーム](sekigon_ecmx20_test.hex)を書き込んでください。RGB_TESTパターンで点灯すればOKです
+    - この段階で動作確認したい場合は[テスト用ファーム](https://github.com/sekigon-gonnoc/ecmx20/releases/download/0.1/sekigon_ecmx20_test.hex)を書き込んでください。RGB_TESTパターンで点灯すればOKです
  - スキャン用モジュールを1番ピン(四角いランド)をあわせて裏向きに取り付ける
     - ピンヘッダの長いほうがモジュール側です
     - ピンヘッダの長い方はブリッジしやすいので、難しく感じる場合には短く切ってからはんだ付けしたり、ブリッジしてしまった場合にはハンダ吸い取り線などで取り除いたりしてください
@@ -148,7 +148,7 @@
   - ハードウェアはこれで完成です
 
 ### ファームウェアを書き込む
-  - [Pro Micro Web Updater](https://sekigon-gonnoc.github.io/promicro-web-updater/)かqmk_toolboxを使って[テスト用キーマップ](sekigon_ecmx20_test.hex)を書き込む
+  - [Pro Micro Web Updater](https://sekigon-gonnoc.github.io/promicro-web-updater/)かqmk_toolboxを使って[テスト用キーマップ](https://github.com/sekigon-gonnoc/ecmx20/releases/download/0.1/sekigon_ecmx20_test.hex)を書き込む
       - LEDがRGB_TESTパターンで点灯します
       - AD変換値をCONSOLE経由で表示できます(後述)
       - ファームウェアの入っているリポジトリ
@@ -170,7 +170,7 @@
     - LOW_THRESHOLD: この値を下回ったらキーを離したと判定する
     - `LOW_THRESHOLD < HIGH_THRESHOLD` の大小関係を守ってください。差は100くらいあれば十分です
 #### しきい値を設定する
-  - Web Serial Plotterを閉じて[ECSKB Configurator](https://sekigon-gonnoc.github.io/ecskb-configurator/)を開く
+    - Web Serial Plotterを閉じて[ECSKB Configurator](https://sekigon-gonnoc.github.io/ecskb-configurator/)を開く
   - 先程決めたしきい値を入力して`write`ボタンを押す
   - ECMX20を選択して接続
 #### キー入力を確認する
@@ -181,7 +181,7 @@
   | ![remap](img/testmatrix.png)                      |
 
 ### キーマップ、LEDを設定する
-  - [Pro Micro Web Updater](https://sekigon-gonnoc.github.io/promicro-web-updater/)かqmk_toolboxを使って[デフォルトキーマップ](sekigon_ecmx20_default.hex)を書き込む
+  - [Pro Micro Web Updater](https://sekigon-gonnoc.github.io/promicro-web-updater/)かqmk_toolboxを使って[デフォルトキーマップ](https://github.com/sekigon-gonnoc/ecmx20/releases/download/0.1/sekigon_ecmx20_default.hex)を書き込む
     - ブートローダを起動するにはリセットボタンを押すか、エンコーダを押し込みながらUSBケーブルを差し込んでください(BOOTMAGIC_LITE)
   - [Remap](https://remap-keys.app/)に接続してキーマップ/LEDを設定する
     - 右上の2キーはエンコーダの回転時に実行するキーコードです
