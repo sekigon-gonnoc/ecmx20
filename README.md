@@ -1,8 +1,8 @@
 # ECMX20ビルドガイド
 
-- ECMX20は静電容量式スイッチ、メカニカルスイッチの両方に対応した自作キーボードキットです。
-  - 静電容量式スイッチで組み立てたあとにメカニカルスイッチで組み直すことは容易ですが、逆は難しいです。
-  - メカニカルスイッチの場合でも静電容量式と同様にスキャンするという今までにない方式のため、予期せぬ問題が発生する可能性があります。
+- ECMX20は静電容量式スイッチ、メカニカルスイッチの両方に対応した自作キーボードキットです
+  - 静電容量式スイッチで組み立てたあとにメカニカルスイッチで組み直すことは容易ですが、逆は難しいです
+  - メカニカルスイッチの場合でも静電容量式と同様にスキャンするという今までにない方式のため、予期せぬ問題が発生する可能性があります
 
 ## 販売リンク
 - [BOOTH](https://nogikes.booth.pm/items/2910601)
@@ -26,6 +26,10 @@
   - [ゴム足、キーキャップをつける](#ゴム足キーキャップをつける)
   - [ファームウェアを書き込む](#ファームウェアを書き込む)
   - [動作点を調整する](#動作点を調整する)
+    - [AD変換値を確認する](#ad変換値を確認する)
+    - [しきい値を設定する](#しきい値を設定する)
+    - [キー入力を確認する](#キー入力を確認する)
+  - [キーマップ、LEDを設定する](#キーマップledを設定する)
   - [静電容量式スイッチのルブについて](#静電容量式スイッチのルブについて)
 
 ## 部品リスト
@@ -75,12 +79,13 @@
  - WS2812C-2020をLED裏側の緑線とシルクの白線が同じ側にくるように取り付る
     - ランドを大きめにしたので、ランドの長手方向にそってハンダゴテを滑らせるとはんだ付けしやすいです 
     - 熱に弱いので焦らず1ピンずつはんだ付けしていってください
+    - この段階で動作確認したい場合は[テスト用ファーム](sekigon_ecmx20_test.hex)を書き込んでください。RGB_TESTパターンで点灯すればOKです
  - スキャン用モジュールを1番ピン(四角いランド)をあわせて裏向きに取り付ける
-    - ピンヘッダの長いほうがモジュール側です。
+    - ピンヘッダの長いほうがモジュール側です
     - ピンヘッダの長い方はブリッジしやすいので、難しく感じる場合には短く切ってからはんだ付けしたり、ブリッジしてしまった場合にはハンダ吸い取り線などで取り除いたりしてください
  - 静電容量式スイッチで組み立てる場合はロータリーエンコーダの裏側のピンのうち、最も太い2つを除く5つを短く切る
  - Pro Microは裏向きに取り付ける
-   - コンスルーのはんだ付け注意点については遊舎工房などのガイドを確認してください。
+   - コンスルーのはんだ付け注意点については遊舎工房などのガイドを確認してください
  - メカニカルスイッチを使う場合はソケットも取り付ける
 
  | ![led](img/led.JPG)             | ![ecmodule1](img/ecmodule1.JPG) |
@@ -143,22 +148,46 @@
   - ハードウェアはこれで完成です
 
 ### ファームウェアを書き込む
-  - Remap/VIA対応のファームをqmk_toolboxを使って書き込む
-  - ファームウェアの入っているリポジトリ
-    https://github.com/sekigon-gonnoc/qmk_firmware/tree/dev/sekigon
-    ```bash
-      make sekigon/exmx20:default:flash
-    ```
+  - [Pro Micro Web Updater](https://sekigon-gonnoc.github.io/promicro-web-updater/)かqmk_toolboxを使って[テスト用キーマップ](sekigon_ecmx20_test.hex)を書き込む
+      - LEDがRGB_TESTパターンで点灯します
+      - AD変換値をCONSOLE経由で表示できます(後述)
+      - ファームウェアの入っているリポジトリ
+        https://github.com/sekigon-gonnoc/qmk_firmware/tree/dev/sekigon
+        ```bash
+          make sekigon/exmx20:test:flash
+        ```
 
 ### 動作点を調整する
-  - (静電容量式スイッチの場合)キーのON/OFFを判定するしきい値を変えて動作店の位置を調整
-    - QMK Toolboxまたは[web-hid-listen](https://sekigon-gonnoc.github.io/web-hid-listen/)に接続すると各キーの読み取り値が表示されます。  
-    - 動作点を調整する場合はこの値の変化を踏まえてconfig.hのしきい値を調整してください。
-        - HIGHはキーを押すときの判定しきい値、LOWはキーを離すときのしきい値です
-        ```c
-        #define HIGH_THRESHOLD 300
-        #define LOW_THRESHOLD 200
-        ```
+#### AD変換値を確認する
+  - [Web Serial Plotter](https://sekigon-gonnoc.github.io/web-serial-plotter/)を開く
+    - 代わりにQMK Toolboxまたは[web-hid-listen](https://sekigon-gonnoc.github.io/web-hid-listen/)に接続してテキスト表示で確認することもできます
+  - Baudrateのドロップダウンリストから`raw_hid`を選択して`OPEN`ボタンをクリック
+  - ECMX20を選択して接続
+  - 列ごとにスイッチのAD変換値がプロットされるので、スイッチを押して値の変化を確認
+    - 他のキーと明らかに傾向が違うスイッチは円錐バネの位置がずれている可能性があります
+  - スイッチの動作しきい値を決める
+    - HIGH_THRESHOLD: この値を超えたらキーを押したと判定する
+    - LOW_THRESHOLD: この値を下回ったらキーを離したと判定する
+    - `LOW_THRESHOLD < HIGH_THRESHOLD` の大小関係を守ってください。差は100くらいあれば十分です
+#### しきい値を設定する
+  - Web Serial Plotterを閉じて[ECSKB Configurator](https://sekigon-gonnoc.github.io/ecskb-configurator/)を開く
+  - 先程決めたしきい値を入力して`write`ボタンを押す
+  - ECMX20を選択して接続
+#### キー入力を確認する
+  - [Remap](https://remap-keys.app/)に接続し、`Test Matrix`でキー入力が認識できるか確認
+
+  | ![web-serial-plotter](img/web-serial-plotter.png) | ![ecskb-configurator](img/ecskb-configurator.png) |
+  | ------------------------------------------------- | ------------------------------------------------- |
+  | ![remap](img/testmatrix.png)                      |
+
+### キーマップ、LEDを設定する
+  - [Pro Micro Web Updater](https://sekigon-gonnoc.github.io/promicro-web-updater/)かqmk_toolboxを使って[デフォルトキーマップ](sekigon_ecmx20_default.hex)を書き込む
+    - ブートローダを起動するにはリセットボタンを押すか、エンコーダを押し込みながらUSBケーブルを差し込んでください(BOOTMAGIC_LITE)
+  - [Remap](https://remap-keys.app/)に接続してキーマップ/LEDを設定する
+    - 右上の2キーはエンコーダの回転時に実行するキーコードです
+    - LED設定は設定編集時のレイヤーごとに保存されるので、レイヤインジケータとして設定できます
+      - LED設定画面を開いている間にレイヤを切り替えないでください。意図したレイヤ/設定にならない場合があります
+      - そのため、`TO(x)`や`DF(x)`を使ってレイヤを切り替えてからLEDを設定することをおすすめします
 
 ###  静電容量式スイッチのルブについて
   - バネ鳴りやスイッチのカサつきはメカニカルスイッチ同様に潤滑剤を塗ることで改善する場合があります
