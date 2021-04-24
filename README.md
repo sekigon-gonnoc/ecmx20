@@ -179,7 +179,7 @@
     - LOW_THRESHOLD: この値を下回ったらキーを離したと判定する
     - `LOW_THRESHOLD < HIGH_THRESHOLD` の大小関係を守ってください。差は100くらいあれば十分です
 #### しきい値を設定する
-    - Web Serial Plotterを閉じて[ECSKB Configurator](https://sekigon-gonnoc.github.io/ecskb-configurator/)を開く
+  - Web Serial Plotterを閉じて[ECSKB Configurator](https://sekigon-gonnoc.github.io/ecskb-configurator/)を開く
   - 先程決めたしきい値を入力して`write`ボタンを押す
   - ECMX20を選択して接続
 #### キー入力を確認する
